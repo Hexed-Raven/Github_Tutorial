@@ -73,7 +73,7 @@ push_project() {
     git commit -m "${COMMIT_MSG}"
 
     # Push to origin and set upstream branch
-    git push -u origin ${BRANCH_NAME}
+    git push origin ${BRANCH_NAME}
 
     # Show final status
     echo "✅ Push complete. Final status:"
