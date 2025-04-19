@@ -82,3 +82,4 @@ push_project() {
 
 # Call the function to start the process
 push_project
+echo "🎉 All done!"
