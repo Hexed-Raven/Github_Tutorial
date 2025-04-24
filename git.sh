@@ -1,102 +1,92 @@
 #!/bin/bash
 
 # Make the script executable using: chmod +x git.sh
-chmod +x git.sh
 
-#move to project folder
-echo "What is Path of your Project ? (. for currunt folder)"
-read PATH
+# Move to project folder
+echo "What is the path of your project? (use '.' for the current folder)"
+read PROJECT_PATH
 
-if [ "$PATH" != "." ]; then
-    #moving to project folder if not current folder
-    cd $PATH
-    echo "moving to $PATH"
-    fi
+if [ "$PROJECT_PATH" != "." ]; then
+    # Moving to project folder if not the current folder
+    cd "$PROJECT_PATH" || { echo "Invalid path! Exiting."; exit 1; }
+    echo -e "Moving to $PROJECT_PATH \n\n"
+fi
 
-# Initialize the Git repository
-git init
-
-# Add the remote repository
-git remote add origin $ORIGIN_URL
 # Ask for GitHub username
-echo "What is your GitHub username? "
+echo -e "\n\nWhat is your GitHub username?"
 read USERNAME
 
 # Ask for GitHub repo name
-echo "What is your repository name? "
+echo -e "\n\nWhat is your repository name?"
 read REPO_NAME
 
 # Construct the GitHub repo URL
-export ORIGIN_URL="https://github.com/${USERNAME}/${REPO_NAME}.git"
+ORIGIN_URL="https://github.com/${USERNAME}/${REPO_NAME}.git"
 
 # Define the main function
 push_project() {
-    echo "📁 Checking Git repository status..."
+    echo -e "\n\n📁 Checking Git repository status..."
 
     # Check if Git repo is already initialized
-    # .git is a hidden directory that Git creates when it initializes a repository
     if [ -d ".git" ]; then
-        echo "✅ Git is already initialized in this directory."
+        echo -e "\n✅ Git is already initialized in this directory."
     else
-        echo "🔧 Initializing a new Git repository..."
-        git init
+        echo -e "\n🔧 Initializing a new Git repository..."
+        git init || { echo "Failed to initialize Git. Exiting."; exit 1; }
     fi
 
     # Check if remote 'origin' already exists
-    if git remote get-url origin &> /dev/null; then
-        echo "✅ Remote 'origin' already exists: $(git remote get-url origin)"
+    if git remote get-url origin &>/dev/null; then
+        echo -e "\n\n✅ Remote 'origin' already exists: $(git remote get-url origin)"
     else
-        echo "🔗 Adding remote origin: $ORIGIN_URL"
-        git remote add origin ${ORIGIN_URL}
+        echo -e "\n\n🔗 Adding remote origin: $ORIGIN_URL"
+        git remote add origin "$ORIGIN_URL" || { echo "Failed to add remote. Exiting."; exit 1; }
     fi
 
     # Get the current branch name
     CURRENT_BRANCH=$(git branch --show-current)
-    echo "📍 You are currently on branch: '${CURRENT_BRANCH}'"
+    echo -e "\n\n📍 You are currently on branch: '${CURRENT_BRANCH}'"
+
+    # Status of your branch
+    echo -e "\n\n📝 Checking the status of your branch..."
+    git status
 
     # Ask user which branch they want to push to
-    echo "On which branch do you want to push the project? "
+    echo -e "\nOn which branch do you want to push the project?"
     read BRANCH_NAME
 
-    # Branch switching logic with extra check for default 'master' → 'main'
+    # Branch switching logic
     if [ "$CURRENT_BRANCH" != "$BRANCH_NAME" ]; then
-        echo "🔍 Checking if we need to switch or rename the branch..."
-
-        if [ "$CURRENT_BRANCH" == "master" ] && [ "$BRANCH_NAME" == "main" ]; then
-            echo "🔁 Renaming 'master' to 'main' as per your input..."
-            git branch -m master main
-        else
-            echo "🔀 Switching to branch '${BRANCH_NAME}'..."
-            git checkout -b "$BRANCH_NAME"
-        fi
+        echo -e "\n🔀 Switching to branch '${BRANCH_NAME}'..."
+        git checkout "$BRANCH_NAME" 2>/dev/null || git checkout -b "$BRANCH_NAME" || { echo "Failed to switch branches. Exiting."; exit 1; }
     fi
 
     # Ask which file(s) to add
-    echo "📦 Which file do you want to add? (type '.' to add all files)"
+    echo -e "\n📦 Which file(s) do you want to add? (type '.' to add all files)"
     read FILE
 
-    # Add based on user input
+    # Add files based on user input
     if [ "$FILE" == "." ]; then
-        git add .
+        git add . || { echo "Failed to add files. Exiting."; exit 1; }
     else
-        git add "$FILE"
+        git add "$FILE" || { echo "Failed to add specified file. Exiting."; exit 1; }
     fi
 
     # Ask user for commit message
-    echo "📝 Enter commit message: "
+    echo -e "\n📝 Enter commit message:"
     read COMMIT_MSG
 
     # Commit the changes
-    git commit -m "${COMMIT_MSG}"
+    git commit -m "${COMMIT_MSG}" || { echo "Commit failed. Exiting."; exit 1; }
 
     # Push to origin and set upstream branch
-    git push origin ${BRANCH_NAME}
+    git push -u origin "${BRANCH_NAME}" || { echo "Push failed. Exiting."; exit 1; }
 
     # Show final status
-    echo "✅ Push complete. Final status:"
+    echo -e "\n✅ Push complete. Final status:"
     git status
 }
 
 # Call the function to start the process
 push_project
-echo "🎉 All done!"
+echo -e "\n\n🎉 All done!"
