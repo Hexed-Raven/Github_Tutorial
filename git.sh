@@ -1,7 +1,23 @@
 #!/bin/bash
 
 # Make the script executable using: chmod +x git.sh
+chmod +x git.sh
 
+#move to project folder
+echo "What is Path of your Project ? (. for currunt folder)"
+read PATH
+
+if [ "$PATH" != "." ]; then
+    #moving to project folder if not current folder
+    cd $PATH
+    echo "moving to $PATH"
+    fi
+
+# Initialize the Git repository
+git init
+
+# Add the remote repository
+git remote add origin $ORIGIN_URL
 # Ask for GitHub username
 echo "What is your GitHub username? "
 read USERNAME
@@ -18,6 +34,7 @@ push_project() {
     echo "📁 Checking Git repository status..."
 
     # Check if Git repo is already initialized
+    # .git is a hidden directory that Git creates when it initializes a repository
     if [ -d ".git" ]; then
         echo "✅ Git is already initialized in this directory."
     else

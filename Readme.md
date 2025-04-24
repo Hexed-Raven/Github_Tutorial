@@ -9,25 +9,42 @@ remote Repo
 Steps to follow 😀
 #### 1.Create a repository on Github                   
  Watch guide at 👇
+### Video Demonstration
+
+<video width="600" controls>
+    <source src="creatingARepo.mp4" type="video/mp4">
+    Your browser does not support the video tag.
+</video>
 
 #### 2.In Local System :
-Go to your project directory  : cd project_dir
+##### 1.Run the git.sh script 
+Copy code from git.sh
+paste in notepad file
+save it as script_name.sh
+Run it 
 
-3. Initialize the git repository in project on your local system  : 
+2. set path to your project directory
+3. add changes
+4. save with commit message
+5. push changes to remote repository on desired branch
+#### Done 🎉🎊
+
+## Another Way (Without Script)
+1. Initialize the git repository in project on your local system  : 
  #### git init 
-4. Attach a remote repository to your project : 
+2. Attach a remote repository to your project : 
  #### git remote add origin repo_url
-5. By default you will be on master branch making master as main : 
+3. By default you will be on master branch making master as main : 
 #### git branch -m master main
-6. add your changes to remote repository : 
+4. add your changes to remote repository : 
 #### git add .  
 add all changes  
 #### git add “filename.ext”
 add only specific file (Like storing a snapshot of your changes )
-7. Save your added changes with a message : 
+5. Save your added changes with a message : 
 #### git commit -m “message”
 ##### NOTE :: Message should be meaningful it must describe which changes were added 
-8. push your changes on remote repository on main branch  git push -u origin main git push origin main
+6. push your changes on remote repository on main branch  git push -u origin main git push origin main
 
 Command	What it does
 git push origin main	Pushes code to origin/main.
