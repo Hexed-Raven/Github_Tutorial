@@ -29,6 +29,9 @@ Run it
 5. push changes to remote repository on desired branch
 #### Done 🎉🎊
 
+![Project Screenshot](output1.png)
+![Project Screenshot](output2.png)
+
 ## Another Way (Without Script)
 1. Initialize the git repository in project on your local system  : 
  #### git init 
